@@ -1,0 +1,29 @@
+% !TEX root = ../main.tex
+\section{The Ethereum Prototype}\label{app:v1}
+
+This appendix records the experimental deployment on Ethereum Mainnet, live since August 28, 2026,\footnote{Live at \url{https://app.pennysia.com}; launch announcement at \url{https://x.com/PennysiaLabs/status/2093384908354048180}; contracts and audits at \url{https://github.com/Pennysia}.} on which the OLN's design is based.
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Parallel venue competition.} 30 venues quote per swap across four service classes (Table~\ref{tab:venues}), reaching thousands of underlying liquidity sources. 12,000+ tokens listed.
+  \item \textbf{Settlement contract.} Open-source onchain router (\texttt{0x3Aad\ldots795E}): single token pull, ordered venue fallback in one transaction, cross-chain intent routes, full revert on all-routes-fail.
+  \item \textbf{Protections.} WAP floor, gas-aware ranking, atomic auto-fallback, unified Settlement approval, double-layer security, the antecedent of Section~\ref{sec:security}'s three layers.
+  \item \textbf{Fees live.} Surplus fee on outperformance (10\% cap, hardcoded), flat per-order protocol fee, partner share on intent routes. Every fee folds into the signed quote.
+  \item \textbf{Audit toolchain.} Slither (static analysis), Halmos (symbolic execution, 168 tests), Medusa (coverage-guided fuzzing, 223 tests), Certora (formal verification, 105 rules). Reports public in the Settlement repo.
+  \item \textbf{Defensive invariants.} Reentrancy guards via EIP-1153~\cite{eip1153}; venue/allowance-target may not equal the contract. Refunds are baseline-relative. Owner keys cannot raise the surplus cap.
+\end{itemize}
+
+\begin{table}[ht]
+\centering\small
+\caption{The prototype's 30-venue coverage by service class.}
+\label{tab:venues}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Class} & \textbf{Venues} \\
+\midrule
+DEXs \& aggregators & onchain spot venues and meta-aggregators \\
+Intent venues & same-chain and cross-chain intent networks \\
+RFQ makers & quote-driven market makers \\
+Privacy swaps & no-account, deposit-address providers; the ancestor of venue rails \\
+\bottomrule
+\end{tabular}
+\end{table}

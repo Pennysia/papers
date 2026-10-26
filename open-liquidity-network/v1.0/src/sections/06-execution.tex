@@ -1,0 +1,70 @@
+% !TEX root = ../main.tex
+\section{Execution}\label{sec:execution}
+
+Execution turns a signed order into settled tokens. The user's part ends at the signature.
+
+\subsection{Signature-first order flow}\label{sec:signature-flow}
+
+The user reviews a quote stating the worst acceptable output (\textbf{WAP}, the minimum received, net of all fees) and signs an order, a typed-data payload binding input, output, floor, deadline, and recipient (Appendix~\ref{app:order}). No transaction, no gas prompt, no chain selection. The network derives the full execution plan and carries it to completion.
+
+\subsection{The three rails}\label{sec:rails}
+
+Orders settle over three rails (Figure~\ref{fig:rails}).
+
+\textbf{Rail 1: Atomic routes (same chain).} A Settlement-class router pulls the user's input once (signed allowance authorization), attempts ranked venues inside one transaction, first success wins. All routes fail $\rightarrow$ full revert, with no partial fills, no stranded funds, no second signature. This is the prototype's production model (Appendix~\ref{app:v1}), replicated per EVM chain.
+
+\textbf{Rail 2: Intent rails (cross-chain / solver fills).} The signed order enters an intent settlement network. A filler commits to the quoted output, pays all gas, and delivers on the destination chain. User exposure is bounded by the signed terms: floor, deadline, recipient. Unfilled intents expire. An order never moves funds without delivery.
+
+\textbf{Rail 3: Venue rails (regulated lane).} Centralized venues settle via escrow contract (atomic onchain exchange~\cite{atomicswaps}) or deposit-address rails, the privacy-swap pattern the prototype already runs, where input goes to a venue address and output arrives asynchronously. Both bounded by the signed terms and reconciled on completion. The counterparty model is disclosed per quote (Section~\ref{sec:risk}).
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\footnotesize, every node/.append style={text=chrome}]
+  \node[align=center] (ord) at (0,0) {\textbf{Signed order}\\ \scriptsize floor \,\textperiodcentered\, deadline \,\textperiodcentered\, recipient};
+  \node[align=center] (fin) at (13.4,0) {\textbf{Verified fill}\\ \scriptsize or controlled failure};
+  % three rail paths, each an arrow converging into the fill
+  \draw[olarrow] (ord.east) -- (4.4,1.5) -- (10.2,1.5) -- (fin.150);
+  \draw[olarrow] (ord.east) -- (fin.west);
+  \draw[olarrow] (ord.east) -- (4.4,-1.5) -- (10.2,-1.5) -- (fin.210);
+  % rail labels
+  \node[anchor=south] at (7.3,1.55) {\textbf{Rail 1: Atomic} \textperiodcentered\ ranked venues, one transaction};
+  \node[anchor=south] at (7.3,0.15) {\textbf{Rail 2: Intent} \textperiodcentered\ filler commits, pays gas};
+  \node[anchor=south] at (7.3,-1.45) {\textbf{Rail 3: Venue} \textperiodcentered\ escrow, async};
+\end{tikzpicture}
+\caption{Three rails, one order format, one set of guarantees. The rails differ; the signed terms do not.}
+\label{fig:rails}
+\end{figure}
+
+\subsection{Guarantees and failure}
+
+One rule across rails: \textbf{funds move only under signed terms; a failed route returns control, not loss.} Formally, for every order $o$ signed by user $u$,
+
+\begin{equation}
+\mathrm{moved}(u, o) \;\Longrightarrow\; \mathrm{delivered}(u, o) \geq \mathrm{WAP}(o) \;\land\; t \leq \mathrm{deadline}(o)
+\end{equation}
+
+\noindent Atomic routes revert wholesale, intents expire unpaid, and venue-rail fills resolve to delivered or refunded. Where a route set exists, the network attempts the next ranked venue before surfacing failure. Table~\ref{tab:guarantees} summarizes the full contract.
+
+\begin{table}[ht]
+\centering\small
+\caption{User-facing guarantees and the mechanism behind each.}
+\label{tab:guarantees}
+\begin{tabular}{@{}p{0.38\textwidth}p{0.52\textwidth}@{}}
+\toprule
+\textbf{Guarantee} & \textbf{Mechanism} \\
+\midrule
+Worst-case output known at signing & WAP embedded in the order; enforced per rail \\
+No gas token required & Executor pays gas, priced into quote; sponsored where unavoidable \\
+No chain management & Rail and destination are the network's problem \\
+Bounded failure & Revert, expiry, or refund; never partial loss \\
+Disclosed settlement time & Single-block same-chain; latency priced into the quote as ETA \\
+One signature & Review $\rightarrow$ sign $\rightarrow$ status to finality \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Latency is part of the contract. Same-chain fills settle within a block, while slower rails carry a bounded ETA priced into the quote, targeting centralized-exchange responsiveness on the fast rail. The surface stays minimal. Pick input and output, see one net number and an ETA, sign once. The rail underneath is visible on demand, never required.
+
+\begin{tbd}
+Atomic routes as one Settlement-family contract per chain vs.\ a canonical intent-native executor shared across chains. Both preserve the semantics; the choice is engineering and audit scoping.
+\end{tbd}

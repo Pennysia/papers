@@ -1,0 +1,18 @@
+% !TEX root = ../main.tex
+\section{Design Principles}\label{sec:principles}
+
+Six commitments govern the design. Where an implementation decision remains open, the governing principle is stated in its place.
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Liquidity is venue-agnostic.} No venue is special. Every liquidity source and service protocol reduces to the same abstraction, \emph{a source that returns an executable price}. Pennysia builds no competing venue, pool, or protocol of its own. It operates the network that connects to all of them.
+
+  \item \textbf{Non-custodial by construction.} The network never holds user funds. No pooled balances, no deposit accounts, no withdrawal queue. If the network disappeared tomorrow, every asset would remain in users' wallets.
+
+  \item \textbf{Signature-first UX.} Users sign. The network transacts. A trade is one review and one signature. Gas, chain selection, submission, and confirmation are the network's problem.
+
+  \item \textbf{Competition decides, not trust.} Quotes rank by \textbf{net executable output} (what lands in the wallet after gas, fees, and fill probability), not headline price. No venue buys placement. Listing is free, rank is earned per order.
+
+  \item \textbf{Compliance is a lane, not a gate.} Verification is opt-in and rewarded with liquidity, never required as the price of entry.
+
+  \item \textbf{Honest fees.} Costs live inside the quote, never after it. The network earns when execution beats the quote, not when it does not. There is no native token, and access is not gated by holdings.
+\end{itemize}

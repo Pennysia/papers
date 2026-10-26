@@ -1,0 +1,40 @@
+% !TEX root = ../main.tex
+\section{Security Model}\label{sec:security}
+
+The prototype's model was double-layered, venue protections plus Pennysia's signed-terms gate. The OLN adds a third: the venue, the execution layer, and the account, each with a distinct job.
+
+\subsection{Venue protections}
+
+Every venue keeps its own security properties (audited contracts, solver bonding, maker collateral, exchange controls) exactly as if the user traded on its frontend. Pennysia adds on top. It never treats a venue as trusted.
+
+\subsection{Enforced execution}
+
+The network enforces the signed order mechanically. The counterparty trust that remains is bounded and disclosed (Section~\ref{sec:risk}).
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Signed bounded terms.} The signature caps the worst case: WAP floor, deadline, recipient. No venue can expand it.
+  \item \textbf{Validation before execution.} Every route and quote is checked regardless of source; headline price authorizes nothing. Execution-order integrity on public chains is adversarial by default~\cite{flashboys}; the network validates rather than assumes ordering.
+  \item \textbf{Unified approvals.} Atomic routes use one Settlement approval instead of per-venue spenders.
+  \item \textbf{Verified fills.} A fill is reconciled against the signed terms (sender, recipient, input, minimum output) before it is recorded as settled. Overquotes and mismatches are rejected, not absorbed.
+  \item \textbf{Atomic fallback.} A failed venue is swapped for the next best inside the same transaction where the route set allows.
+\end{itemize}
+
+\subsection{Account and key security}
+
+The custody table in Section~\ref{sec:account} is the security claim. Pennysia's servers are never signers, sessions authorize only quote assembly and account operations, and the network holds no pooled user assets to attack.
+
+\subsection{Honest risk accounting}\label{sec:risk}
+
+The residual risks, stated plainly:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Cross-chain latency.} Intent fills are asynchronous; the market can move between signing and delivery. The risk is an expired order, not a worse fill, but expiry is a cost.
+  \item \textbf{Solver/filler dependence.} Intent rails inherit solver liveness. Multiple filler networks plus atomic fallback mitigate, not eliminate.
+  \item \textbf{Regulated-lane counterparty exposure.} Venue rails extend bounded trust to a centralized venue for the settlement window, a different trust profile than an atomic swap, disclosed per quote, which is why the lane is opt-in.
+  \item \textbf{Approval concentration.} Unified approval concentrates exposure in the Settlement contract, hence open source plus four audit toolchains (Appendix~\ref{app:v1}) as the bar for every deployment.
+  \item \textbf{Embedded-wallet trust model.} Keys are co-secured with the wallet provider (threshold/MPC-class custody~\cite{threshold}). External wallets remain first-class for users preferring a different model.
+\end{itemize}
+
+New contracts follow the prototype's bar: open source, unit/fuzz/invariant coverage, symbolic execution, coverage-guided fuzzing, and formal verification where tractable. Deployment artifacts and audits publish with each chain rollout.
+
+The compounding benefit is uniformity. Accessing protocols directly means inheriting each one's risk surface. Routing through the network collapses that to a single security posture: one interface, one signature, one guarantee set, one point of contact, with the signed-terms gate between the user and every provider's individual risk.

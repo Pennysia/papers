@@ -1,0 +1,37 @@
+% !TEX root = ../main.tex
+\section{Roadmap}\label{sec:roadmap}
+
+Phases are ordered by dependency, not date. Each ships a working product (Table~\ref{tab:roadmap}).
+
+\begin{table}[ht]
+\centering\small
+\caption{Rollout phases: ordered by dependency, each shipping a working product with a concrete exit criterion.}
+\label{tab:roadmap}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.17\textwidth}p{0.44\textwidth}p{0.31\textwidth}@{}}
+\toprule
+\textbf{Phase} & \textbf{Ships} & \textbf{Exit when} \\
+\midrule
+\textbf{0. Prototype} \emph{(Ethereum mainnet)} &
+Parallel venue competition, Settlement with atomic fallback, WAP floor, four audit toolchains, public docs/SDK/status surface &
+The core loop (broadcast, compare, protect, execute) runs in production \\
+\addlinespace[0.4em]
+\textbf{1. Account + multi-chain spot} &
+Embedded wallets (Web2 login $\rightarrow$ non-custodial EVM and Solana addresses), external-wallet parity, quote market across major EVM L2s, Solana, BNB Chain; signature-first same-chain fills &
+A user with only a Web2 login and USDC executes a same-chain swap: no seed phrase, no native gas token \\
+\addlinespace[0.4em]
+\textbf{2. Chainless execution} &
+Cross-chain parity: intent rails under the same one-signature flow, unified balance, Settlement on major EVM networks, fallback across route chains, deeper venue coverage &
+Any asset on any chain to any asset on any chain, in one signature, WAP floor, one status line \\
+\addlinespace[0.4em]
+\textbf{3. Regulated lane} &
+Verification tier; first centralized venues join the quote market; fiat ramps connect through the same credential (cards, bank, mobile pay); venue rails reach production; jurisdiction-aware eligibility &
+A verified user's large order is won by a regulated venue, in an interface unverified users never notice missing \\
+\addlinespace[0.4em]
+\textbf{4. Network scale} &
+New service verticals join the quote market (perpetuals, prediction markets, yield vaults); more chain families; public order-format spec; documented APIs/SDKs &
+Third-party fillers and integrators build on the network \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This paper should be judged on four metrics: onboarding completion (account to first settled trade without a seed phrase or gas token), cross-chain fill quality versus the best single-chain alternative, venue count and share of fills won per lane, and fill-verification rate together with failure-mode frequency.

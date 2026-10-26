@@ -1,0 +1,43 @@
+\documentclass[10pt]{article}
+\usepackage{pennysia}
+
+\hypersetup{
+  pdftitle={Pennysia: An Open Liquidity Network},
+  pdfauthor={Pennysia, Inc.},
+  pdfsubject={Whitepaper v1.0},
+  pdfkeywords={Pennysia, liquidity, DeFi, chain abstraction, intent, exchange}
+}
+
+\title{\textbf{Pennysia: An Open Liquidity Network}}
+\author{Pennysia, Inc.}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent\input{sections/00-abstract}
+\end{abstract}
+
+\vspace{0.5em}
+{\small\noindent\textit{This paper describes Pennysia v1, the Open Liquidity Network, as designed. Design decisions open at publication are noted where they occur; the Ethereum deployment documented in Appendix~\ref{app:v1} demonstrates the core mechanisms in production.}}
+
+\input{sections/01-introduction}
+\input{sections/02-principles}
+\input{sections/03-architecture}
+\input{sections/04-account}
+\input{sections/05-quote-market}
+\input{sections/06-execution}
+\input{sections/07-security}
+\input{sections/09-compliance}
+\input{sections/10-roadmap}
+
+\FloatBarrier
+\appendix
+\input{sections/appendix-a}
+\input{sections/appendix-b}
+
+\clearpage
+\input{sections/references}
+
+\end{document}

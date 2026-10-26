@@ -1,0 +1,70 @@
+% !TEX root = ../main.tex
+\section{The Quote Market}\label{sec:quote-market}
+
+Liquidity today sits on protocols the way accommodation sits on hotels. Thousands of providers serve the same essential need, at different prices and terms, and a user should no more browse every venue than a traveler should browse every hotel's website. The quote market is the routing layer. It turns a fragmented liquidity landscape into a single price. Every order is an auction, every eligible venue sees the same request simultaneously, and the best \emph{executable} answer wins~\cite{solverwelfare}.
+
+\subsection{The auction}
+
+A trade request (sell X, get Y) broadcasts to every venue in the user's enabled lanes. Formally, for user $u$ each venue $v$ in the eligible set $E(u)$ returns a quote $(y_v, c_v, p_v)$: gross output, all-in cost (gas, venue and protocol fees), and fill probability, with expected settlement latency folded into the ranking. Quotes answer within a response window $\tau$ set by the market. A venue that misses the window does not rank, so every quote in the auction is a live commitment rather than indicative pricing. The market selects the venue maximizing net executable output:
+
+\begin{equation}
+E(u) \;=\; \mathcal{V}_{\mathrm{perm}} \;\cup\; \mathbf{1}[\mathrm{verified}(u)]\cdot \mathcal{V}_{\mathrm{reg}},
+\qquad
+v^{*}(o) \;=\; \underset{v \in E(u)}{\arg\max}\; \underbrace{p_v \cdot (y_v - c_v)}_{\mathrm{net\; output}}
+\end{equation}
+
+\noindent A quote 0.3\% better that fails 5\% of the time loses to a slightly worse quote that settles. This ranking already runs on the Ethereum prototype; the OLN applies it identically across chains and venue classes.
+
+\subsection{Two axes of liquidity}\label{sec:lanes}
+
+Liquidity fragments along two independent axes: \textbf{permission} (who is allowed to serve a given user) and \textbf{location} (onchain protocols and contracts, or offchain books and inventory). The axes are orthogonal. A walletless provider quotes permissionlessly from offchain inventory, while a compliant pool is permissioned yet holds its liquidity onchain.
+
+The permission axis defines the user's \emph{lane}. A permissionless venue is an open city, a regulated venue a licensed jurisdiction. The \textbf{permissionless lane} is open to every user: every open liquidity source (DEXs, aggregators, intent networks, RFQ makers, walletless providers), carrying the full prototype venue set. The \textbf{regulated lane} unlocks through optional verification (Section~\ref{sec:compliance}): centralized market makers, OTC desks, CEX-linked liquidity, and fiat ramps, where depth on large size tends to live.
+
+The location axis predicts the execution rail (Section~\ref{sec:execution}). Atomic and intent rails settle onchain liquidity, and venue rails bridge offchain books to onchain delivery.
+
+The lanes share one auction and one ranking. A regulated venue enters the same competition and wins by the same rule.
+
+\subsection{Venue and service classes}\label{sec:venue-classes}
+
+Figure~\ref{fig:axes} maps the landscape onto both axes.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\footnotesize, every node/.append style={text=chrome}]
+  \pgfmathsetlengthmacro{\qw}{0.39\textwidth}
+  \def\qh{2.3}
+  % axes: x = permission, y = location
+  \draw[olline] (-\qw,0) -- (\qw,0);
+  \draw[olline] (0,-\qh) -- (0,\qh);
+  % axis-end labels
+  \node[font=\footnotesize\bfseries, anchor=east] at (-\qw,0) {Permissionless};
+  \node[font=\footnotesize\bfseries, anchor=west] at (\qw,0) {Regulated};
+  \node[font=\footnotesize\bfseries, anchor=south] at (0,\qh) {Onchain};
+  \node[font=\footnotesize\bfseries, anchor=north] at (0,-\qh) {Offchain};
+  % quadrants
+  \node[align=center, text width=0.42\textwidth] at (-0.5*\qw,0.5*\qh)
+    {\textbf{Open, self-settling}\\[0.3em]
+     DEXs, aggregators, intents, RFQ makers\\[0.15em]
+     perps, prediction markets, yield vaults};
+  \node[align=center, text width=0.42\textwidth] at (0.5*\qw,0.5*\qh)
+    {\textbf{Gated onchain}\\[0.3em]
+     KYC'd pools, compliant vaults};
+  \node[align=center, text width=0.42\textwidth] at (-0.5*\qw,-0.5*\qh)
+    {\textbf{Open offchain}\\[0.3em]
+     privacy-swap providers};
+  \node[align=center, text width=0.42\textwidth] at (0.5*\qw,-0.5*\qh)
+    {\textbf{Gated offchain}\\[0.3em]
+     CEX makers, OTC desks, fiat ramps};
+\end{tikzpicture}
+\caption{Two axes of liquidity. The horizontal axis is permission, the user's lane; the vertical axis is where the liquidity lives. Every class enters the same auction behind the same signed-terms gate.}
+\label{fig:axes}
+\end{figure}
+
+The classes extend beyond swaps. Any service returning an executable price for a position (a perpetual, a market share, a vault deposit, a fiat conversion) enters the same auction under the same abstraction. Coverage compounds with every connection. Each chain adds its venue set, each venue extends the token surface, and a token liquid anywhere becomes tradable everywhere.
+
+Joining differs by lane. The permissionless lane is free and self-serve. Any venue that returns executable quotes against the network's adapter interface joins the auction, the model that grew the prototype to 30 venues. The regulated lane adds a compliance onboarding covering licenses, jurisdictions, and settlement rails. Once connected, a venue competes for every order from day one, ranked on output alone.
+
+\subsection{Chainless quoting}
+
+A quote request names assets and intent, not a chain. Chains are plumbing in this model, an internet provider for the services deployed on them, relevant to routing but irrelevant to the requester. The routing layer resolves where the fill happens (same-chain, cross-chain via fillers, or a regulated venue), and the user reviews net output and rail type, never a chain diagram. Chainless is the property of this liquidity network.

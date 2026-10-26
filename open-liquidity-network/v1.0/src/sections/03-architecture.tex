@@ -1,0 +1,61 @@
+% !TEX root = ../main.tex
+\section{System Overview}\label{sec:architecture}
+
+Four layers, each with one job (Figure~\ref{fig:layers}). Users interact only with the top. Venues integrate only with the middle.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\footnotesize, every node/.append style={text=chrome}]
+  \draw[olline] (0,0) rectangle (0.97\textwidth,3.2);
+  \draw[olline] (0,0.8) -- (0.97\textwidth,0.8);
+  \draw[olline] (0,1.6) -- (0.97\textwidth,1.6);
+  \draw[olline] (0,2.4) -- (0.97\textwidth,2.4);
+  \draw[olline] (3.1,0) -- (3.1,3.2);
+  \node[anchor=west] at (0.15,2.8) {\textbf{Experience}};
+  \node[anchor=west, align=left] at (3.35,2.8) {one account, one balance, one ticket; chain \& gas hidden, status to finality};
+  \node[anchor=west] at (0.15,2.0) {\textbf{Identity}};
+  \node[anchor=west, align=left] at (3.35,2.0) {login $\rightarrow$ non-custodial wallets (embedded or external); optional KYC};
+  \node[anchor=west] at (0.15,1.2) {\textbf{Quote market}};
+  \node[anchor=west, align=left] at (3.35,1.2) {parallel fanout $\rightarrow$ ranked net output; permissionless lane $|$ regulated lane};
+  \node[anchor=west] at (0.15,0.4) {\textbf{Execution}};
+  \node[anchor=west, align=left] at (3.35,0.4) {signed order $\rightarrow$ best venue $\rightarrow$ verified fill; Settlement, intents, venue rails};
+\end{tikzpicture}
+\caption{Four layers, each with one job. Users interact only with the top; venues integrate only with the quote market and execution layers.}
+\label{fig:layers}
+\end{figure}
+
+\textbf{Identity} provisions non-custodial embedded wallets per chain family from a Web2 login (email, Google, Apple); external wallets connect for the same surface (Section~\ref{sec:account}). The \textbf{quote market} fans every order out in parallel to all venues in the user's enabled lanes and normalizes and ranks the quotes (Section~\ref{sec:quote-market}). The \textbf{execution fabric} carries a signed order to settlement over three rails (atomic routes, intent rails, venue rails) under one set of guarantees (Section~\ref{sec:execution}). The \textbf{experience} presents a unified balance, one trade ticket, and one status line, with chains visible only on request; portfolio and verification state also live here (Section~\ref{sec:compliance}).
+
+Every order walks the same loop (quote, sign, execute, verify) regardless of which rail carries it. Figure~\ref{fig:participants} draws the boundary each participant sees.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\footnotesize, every node/.append style={text=chrome}]
+  % Pennysia boundary
+  \draw[olline, rounded corners=3pt] (3.2,-0.7) rectangle (11.6,2.5);
+  \node[font=\footnotesize\bfseries] at (7.4,2.1) {Pennysia};
+  % layers
+  \node[olbox, minimum width=1.7cm] (exp) at (4.5,1.0) {Experience};
+  \node[olbox, minimum width=1.7cm] (idn) at (6.7,1.0) {Identity};
+  \node[olbox, minimum width=2.1cm] (qm)  at (9.0,1.0) {Quote market};
+  \node[olbox, minimum width=1.8cm] (exe) at (10.4,-0.3) {Execution};
+  % participants
+  \node[olbox, ellipse, minimum width=2.0cm] (user) at (0.6,1.0) {\textbf{User}};
+  \node[olbox, ellipse, minimum width=3.2cm, align=center] (wallet) at (5.5,-2.4)
+    {\textbf{Wallet provider}\\ \scriptsize co-secures keys};
+  \node[olbox, ellipse, minimum width=3.2cm, align=center] (verif) at (8.9,-2.4)
+    {\textbf{KYC provider}\\ \scriptsize optional credential};
+  \node[olbox, ellipse, minimum width=3.0cm, align=center, minimum height=2.4cm] (ven) at (14.5,0.6)
+    {\textbf{Venues}\\ \scriptsize DEXs $\cdot$ intents\\ \scriptsize RFQ $\cdot$ regulated\\ \scriptsize ramps $\cdot$ vaults\\[2pt] \scriptsize\itshape ranked winner fills};
+  % connections
+  \draw[olarrow] (user.east) -- node[ollabel, above]{signs once} (exp.west);
+  \draw[olarrow] (wallet.north) -- node[ollabel, left, pos=0.28]{key shares} (idn.south west);
+  \draw[olarrow] (verif.north) -- node[ollabel, right, pos=0.28]{credential} (idn.south east);
+  \draw[olarrow] ([yshift=5pt]qm.east) -- node[ollabel, above, pos=0.3]{orders} ([yshift=5pt]qm.east -| ven.west);
+  \draw[olarrow] ([yshift=-5pt]qm.east -| ven.west) -- node[ollabel, below, pos=0.7]{quotes} ([yshift=-5pt]qm.east);
+  \draw[olarrow] ([yshift=4pt]exe.east) -- node[ollabel, above]{execute} ([yshift=4pt]exe.east -| ven.west);
+  \draw[olarrow] ([yshift=-4pt]exe.east -| ven.west) -- node[ollabel, below]{fill} ([yshift=-4pt]exe.east);
+\end{tikzpicture}
+\caption{How each participant connects. The user touches only Experience; wallet and KYC providers touch only Identity; venues see only the quote market and execution layers, and only the ranked winner receives the signed order. Pennysia signs nothing and holds nothing.}
+\label{fig:participants}
+\end{figure}

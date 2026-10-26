@@ -1,0 +1,120 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{pennysia}[2026/10/22 Pennysia whitepaper style]
+
+% ---- Fonts & page -----------------------------------------------------------
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{newtxtext,newtxmath}          % Times-family — Uniswap-v2 look
+\RequirePackage[margin=1in,top=0.9in,bottom=1in]{geometry}
+\RequirePackage{microtype}
+
+% ---- Structure --------------------------------------------------------------
+\RequirePackage{array}
+\RequirePackage{booktabs}
+\RequirePackage{amsmath}
+\RequirePackage{enumitem}
+\RequirePackage{titlesec}
+\RequirePackage{caption}
+\RequirePackage{xcolor}
+\RequirePackage{amsmath}
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\RequirePackage{placeins}                     % \FloatBarrier at section boundaries
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+
+% ---- Colors & links ----------------------------------------------------------
+\definecolor{pennblue}{RGB}{20,45,95}
+\definecolor{darkbg}{RGB}{24,26,31}
+\definecolor{darkfg}{RGB}{228,228,225}
+\definecolor{darklink}{RGB}{122,162,224}
+\definecolor{darkrule}{RGB}{92,98,112}
+\definecolor{lightfill}{RGB}{245,245,242}
+\definecolor{darkfill}{RGB}{36,38,45}
+\RequirePackage[colorlinks=true,linkcolor=pennblue,urlcolor=pennblue,citecolor=pennblue]{hyperref}
+
+% Dark variant: build main-dark.tex for a dark-reading PDF (preview use).
+\ifdefined\darkmode
+  \colorlet{chrome}{darkfg}
+  \colorlet{rulecol}{darkrule}
+  \colorlet{diafill}{darkfill}
+  \colorlet{accent}{darklink}
+  \hypersetup{linkcolor=darklink,urlcolor=darklink,citecolor=darklink}
+  \AtBeginDocument{%
+    \pagecolor{darkbg}\color{darkfg}%
+    \let\default@color\current@color  % \normalcolor follows dark mode (TOC page nos.)
+  }
+\else
+  \colorlet{chrome}{black}
+  \colorlet{rulecol}{black}
+  \colorlet{diafill}{lightfill}
+  \colorlet{accent}{pennblue}
+\fi
+
+% ---- Section heading style ---------------------------------------------------
+\titleformat{\section}{\Large\bfseries}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{0.8em}{}
+\titlespacing*{\section}{0pt}{1.3em}{0.7em}
+\titlespacing*{\subsection}{0pt}{1.0em}{0.5em}
+\setlist{topsep=0.4em,itemsep=0.25em,parsep=0em}
+\setlength{\textfloatsep}{1.1em plus 2pt minus 2pt}
+\setlength{\floatsep}{0.9em plus 2pt minus 2pt}
+\setlength{\intextsep}{1.0em plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{0.6em}
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{4pt plus 1pt minus 2pt}%
+  \setlength{\belowdisplayskip}{4pt plus 1pt minus 2pt}%
+  \setlength{\abovedisplayshortskip}{2pt plus 1pt}%
+  \setlength{\belowdisplayshortskip}{3pt plus 1pt minus 1pt}%
+}
+
+% ---- Header / footer ----------------------------------------------------------
+% Journal pattern: running title top-left, page number top-right,
+% citation line bottom-left. No rules.
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\footnotesize\scshape Pennysia: An Open Liquidity Network}
+\fancyhead[R]{\footnotesize\thepage}
+\fancyfoot[L]{\footnotesize Whitepaper v1.0 \textperiodcentered\ October 2026}
+\renewcommand{\footnoterule}{%
+  \kern-3\p@
+  {\color{rulecol}\hrule\@width 2in}%
+  \kern 2.6\p@}
+
+% ---- Open design decisions ---------------------------------------------------
+\newenvironment{tbd}{%
+  \par\noindent\textbf{Open design decision.}~%
+}{\par}
+
+% ---- Misc ---------------------------------------------------------------------
+\setlength{\parindent}{1.5em}
+\captionsetup{font=small,labelfont=bf}
+\captionsetup[table]{position=above}
+
+% ---- Diagram styles ------------------------------------------------------------
+\tikzset{
+  olbox/.style={draw=rulecol, fill=diafill, rounded corners=2pt, inner sep=5pt,
+                text=chrome, align=center},
+  ollabel/.style={text=chrome, font=\footnotesize\itshape},
+  olarrow/.style={-{Latex[length=2mm]}, draw=rulecol, line width=0.7pt},
+  olline/.style={draw=rulecol, line width=0.7pt},
+}
+
+% ---- Chart style ---------------------------------------------------------------
+\pgfplotsset{
+  olchart/.style={
+    width=\textwidth, height=4.2cm,
+    axis line style={draw=rulecol},
+    axis lines=left,
+    tick style={draw=rulecol},
+    tick label style={text=chrome, font=\footnotesize},
+    label style={text=chrome, font=\footnotesize},
+    legend style={text=chrome, font=\footnotesize, draw=rulecol, fill=diafill},
+    grid=major, grid style={draw=rulecol!35},
+    enlargelimits=false,
+  },
+}
+
+\endinput

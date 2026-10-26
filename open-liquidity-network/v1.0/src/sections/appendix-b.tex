@@ -1,0 +1,30 @@
+% !TEX root = ../main.tex
+\section{Order Format}\label{app:order}
+
+A preliminary sketch of the order payload, the unit every venue competes to fill, signed as EIP-712 typed data on EVM~\cite{eip712}. Field-level spec publishes when the format stabilizes; this shows intent, not wire format.
+
+{\footnotesize
+\begin{verbatim}
+OLN-Order {
+  version:      uint16        // format version
+  signer:       address       // embedded or external wallet
+  input: {
+    chain:      chainId       // origin chain
+    token:      address       // asset sold
+    amount:     uint256       // exact input
+  }
+  output: {
+    chain:      chainId       // destination chain
+    token:      address       // asset bought
+    minAmount:  uint256       // WAP floor - worst acceptable output
+  }
+  lanes:        bitmask       // PERMISSIONLESS | REGULATED
+  recipient:    address       // output delivery address
+  deadline:     timestamp     // order expiry
+  nonce:        uint256       // replay protection + uniqueness
+  signature:    bytes         // EIP-712 typed-data (EVM) / equiv. (Solana)
+}
+\end{verbatim}
+}
+
+\texttt{minAmount} \textbf{is the WAP}, the worst-case output the user signed, enforced on every rail. \texttt{lanes} scopes which venues may fill, and \texttt{REGULATED} requires a verified user. Fillers read the same object on every rail: take \texttt{input} on \texttt{input.chain}, deliver \texttt{output} on \texttt{output.chain}, at or above \texttt{minAmount}, before \texttt{deadline}.

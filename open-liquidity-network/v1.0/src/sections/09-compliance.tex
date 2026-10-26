@@ -1,0 +1,12 @@
+% !TEX root = ../main.tex
+\section{Compliance Posture}\label{sec:compliance}
+
+The OLN's answer to regulation is structural. \textbf{Compliance is a routing dimension.} The permissionless lane is the default, not a limited mode. It carries the full onchain venue set with no verification. Optional verification unlocks the regulated lane's centralized venues, which their own obligations require to serve identified counterparties. Same interface, same signed orders, deeper books.
+
+The result is liquidity tiering rather than binary compliance. Verified users get deeper fills on size, and venues get a compliant counterparty pool without building distribution. One account spans both worlds, with the boundary placed where each venue's rules put it. \label{sec:credential} The design goal is \textbf{one verification, whole lane}, a network-level credential accepted by regulated venues rather than KYC repeated per venue. Identity data stays with the verification provider and each venue's own onboarding. Pennysia orchestrates. It does not hold documents.
+
+\begin{tbd}
+Credential mechanics: network-level attestation consumed by venues vs.\ per-venue onboarding with synced status. The first is the intent; venue acceptance governs which ships.
+\end{tbd}
+
+Eligibility applies per venue and per quote. Each regulated venue serves licensed jurisdictions, so some users will find the lane partially or wholly unavailable. The mechanism already runs in production as mechanical eligibility gates, formalized here as a lane rather than a switch. The limits are equally plain. Regulated-lane depth depends on venue onboarding and launches narrow, venue-rail settlement carries the bounded counterparty exposure in Section~\ref{sec:risk}, and Pennysia provides no legal or tax determinations, though venue rules are enforced mechanically and displayed plainly.

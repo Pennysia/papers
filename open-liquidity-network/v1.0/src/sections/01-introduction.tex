@@ -1,0 +1,87 @@
+% !TEX root = ../main.tex
+\section{Introduction}\label{sec:introduction}
+
+Crypto liquidity is fragmented along two axes at once~\cite{sok-defi}, and every exchange today serves only a slice of the result.
+
+The first axis is \textbf{chains}. Liquidity is spread across dozens of networks (Ethereum and its L2s, Solana, BNB Chain, and a growing set of new execution environments), each with its own DEXs, aggregators, market makers, and intent protocols. No single venue wins on every pair, size, and moment. A trader who chases prices across chains inherits bridge risk~\cite{bridges}, gas-token juggling, and a different mental model per network. Chains behave like disconnected internets. A service lives where it deployed, and reaching it elsewhere means switching providers. Even the strongest onchain venues remain single-domain: excellent execution on their own chains and instruments, with the rest of the market outside reach.
+
+The second axis is the \textbf{protocol boundary}: the split between \emph{open} and \emph{closed} protocols. Open protocols (DEXs, intent networks, onchain markets and vaults) are permissionless, transparent, and self-settling, but shallow on size~\cite{dexdepth}. Closed protocols (centralized books, market makers, OTC desks) hold deeper, tighter liquidity behind accounts, KYC, and custodial terms. Traders choose between two products and two trust models, with no common interface. The deepest quote in the world is invisible to an open-protocol trader.
+
+Between the trader and both axes sits \textbf{the UX wall}. Self-custody is the founding premise of this space: Bitcoin was built so that holding and moving value requires no trusted intermediary~\cite{bitcoin}. Its cost has never been ideological; it is operational. Seed phrases gate the first ten minutes. Gas requires a native token on every chain. Chain selection, bridging, and per-venue approvals turn one trade into a checklist, and the endpoints (buying in with a card, cashing out to a bank account) still route through custodial platforms. Each step is a point where users exit to a centralized exchange's account login. The market's trade-off today: \textbf{easy to use, or yours.} Centralized exchanges offer the experience; decentralized venues offer the custody. No venue offers both. Figure~\ref{fig:journey} lays out both journeys.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[font=\footnotesize, every node/.append style={text=chrome}]
+\pgfmathsetlengthmacro{\colw}{0.94\textwidth/4}
+\pgfmathsetlengthmacro{\labx}{0.12cm}
+% frame: DeFi row 1.6--4.2, CeFi row 0--1.6
+\draw[olline] (0,0) rectangle (0.94\textwidth,4.2);
+\draw[olline] (0,1.6) -- (0.94\textwidth,1.6);
+\draw[olline] (1*\colw,0) -- (1*\colw,4.2);
+\draw[olline] (2*\colw,0) -- (2*\colw,4.2);
+\draw[olline] (3*\colw,0) -- (3*\colw,4.2);
+% column headers
+\node[ollabel, anchor=south] at (0.5*\colw,4.2) {\footnotesize On-ramp};
+\node[ollabel, anchor=south] at (1.5*\colw,4.2) {\footnotesize Wallet};
+\node[ollabel, anchor=south] at (2.5*\colw,4.2) {\footnotesize Activity};
+\node[ollabel, anchor=south] at (3.5*\colw,4.2) {\footnotesize Off-ramp};
+% row labels
+\node[ollabel, rotate=90] at (-0.4,2.9) {\footnotesize DeFi};
+\node[ollabel, rotate=90] at (-0.4,0.8) {\footnotesize CeFi};
+% DeFi row
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (\labx,4.1)
+  {1.~open a CEX or card-ramp\\ \hspace{0.6em}account\\ 2.~pass KYC either way\\ 3.~buy the asset\\ 4.~wait out the withdrawal lock};
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (\colw+\labx,4.1)
+  {5.~install a wallet\\ 6.~write down the seed phrase\\ 7.~acquire the gas token\\ 8.~withdraw to the right chain};
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (2*\colw+\labx,4.1)
+  {9.~pick venue and chain\\ 10.~approve token (tx + gas)\\ 11.~swap (gas)\\ 12.~bridge if needed (gas + wait)};
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (3*\colw+\labx,4.1)
+  {13.~sell into a stablecoin\\ 14.~send back to a CEX\\ 15.~sell for fiat\\ 16.~bank withdrawal};
+% CeFi row
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (\labx,1.5)
+  {1.~open account\\ 2.~pass KYC\\ 3.~deposit by card or bank};
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (\colw+\labx,1.5)
+  {4.~balance and keys\\ \hspace{0.5em}held by the venue};
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (2*\colw+\labx,1.5)
+  {5.~trade on the venue's\\ \hspace{0.5em}internal ledger};
+\node[anchor=north west, align=left, text width=\colw-0.3cm] at (3*\colw+\labx,1.5)
+  {6.~bank withdrawal};
+\end{tikzpicture}
+\caption{Illustrative fiat-in to fiat-out journeys. Self-custody: ${\sim}16$ steps across three platforms, with seed custody, gas, and chain choice at every boundary; card funding still means a KYC'd ramp at a markup. Custodial: ${\sim}6$ steps, because the venue holds the keys. Design target: self-custody at the custodial step count.}
+\label{fig:journey}
+\end{figure}
+
+Three enablers make this the moment to build it. Intent-based execution~\cite{intentauction} turned ``user signs, someone else transacts'' into production infrastructure, the mechanical basis for gasless, chainless trades. Embedded wallets matured~\cite{smartaccounts} to where a Web2 login (email, Google, Apple) provisions real EVM and Solana wallets, giving Web2 onboarding with user-side keys. And venue proliferation across both liquidity kinds makes comparison a routing problem, not a shopping problem. Figure~\ref{fig:dexshare} charts the migration already underway.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[olchart,
+  xmin=2021, xmax=2027,
+  ymin=0, ymax=40,
+  xtick={2021,2022,2023,2024,2025,2026},
+  xticklabels={2021,2022,2023,2024,2025,2026},
+  ylabel={DEX volume as \% of CEX spot volume},
+  ytick={0,10,20,30,40},
+]
+% Monthly spot ratio, Jan 2021 -- Sep 2024 (CoinGecko).
+\addplot[accent, thick] coordinates {
+(2021.000,5.98) (2021.083,6.32) (2021.167,7.6) (2021.250,7.84) (2021.333,10.41) (2021.417,13.07) (2021.500,11.82) (2021.583,10.37) (2021.667,9.91) (2021.750,7.44) (2021.833,9.44) (2021.917,12.89) (2022.000,14.58) (2022.083,14.58) (2022.167,11.42) (2022.250,8.72) (2022.333,9.44) (2022.417,9.04) (2022.500,9.3) (2022.583,7.32) (2022.667,5.43) (2022.750,6.29) (2022.833,8.76) (2022.917,8.02) (2023.000,8.04) (2023.083,7.18) (2023.167,10.32) (2023.250,10.18) (2023.333,11.78) (2023.417,10.42) (2023.500,9.46) (2023.583,9.47) (2023.667,10.86) (2023.750,9.36) (2023.833,9.32) (2023.917,9.07) (2024.000,8.65) (2024.083,8.35) (2024.167,9.28) (2024.250,10.25) (2024.333,11.22) (2024.417,13.02) (2024.500,12.95) (2024.583,11.8) (2024.667,10.16)
+};
+% Reported landmark months: CoinGecko readings (circles),
+% then The Block top-30-DEX series (square; wider venue set).
+\addplot[accent, thick, mark=*, mark size=1.1pt] coordinates {
+(2024.667,10.16) (2025.000,18.7) (2025.417,37.4) (2025.833,21.2)
+};
+\addplot[accent, thick, mark=square*, mark size=1.9pt] coordinates {
+(2025.833,21.2) (2026.67,25.0)
+};
+\node[ollabel, anchor=south west, inner sep=2pt] at (axis cs:2026.67,25.0) {25\%};
+\end{axis}
+\end{tikzpicture}
+\caption{DEX spot volume as a share of CEX spot volume, 2021--2026: 6\% to ${\sim}25\%$. Line and circles: CoinGecko~\cite{coingecko} (monthly through Sep.\ 2024; landmark months after). Square: The Block's wider top-30-DEX series, Sep.\ 2026~\cite{theblock}, indicative not strictly comparable. The migration is real but incomplete; the UX wall is the remaining ceiling.}
+\label{fig:dexshare}
+\end{figure}
+
+Pennysia v1, the Open Liquidity Network (OLN), generalizes the Ethereum prototype's proof (Appendix~\ref{app:v1}) along both fragmentation axes: a unified layer spanning \textbf{every chain} and \textbf{every liquidity service} (spot today; perpetuals, prediction markets, and yield protocols next), wrapped in an account that removes the UX wall. Pennysia implements none of these services; it operates the network that connects to all of them. The end state is a superset of the centralized exchange: every essential feature (one login, fiat rails, deepest liquidity, more tokens, fast settlement) with custody that never leaves the user's keys. For builders the network is distribution: a new protocol connects once and competes for every order.
+
