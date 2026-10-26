@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage[paperwidth=32in,paperheight=16in,margin=0pt]{geometry}
+\usepackage{tikz}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext}
+\definecolor{bg}{RGB}{24,26,31}
+\definecolor{fg}{RGB}{228,228,225}
+\definecolor{link}{RGB}{122,162,224}
+\definecolor{fill}{RGB}{46,50,60}
+\definecolor{rule}{RGB}{92,98,112}
+\pagecolor{bg}
+\pagestyle{empty}
+\begin{document}%
+\begin{tikzpicture}[x=2in,y=2in]
+  \fill[bg] (0,0) rectangle (16,8);
+  % liquidity-map quadrant motif, right side
+  \begin{scope}[shift={(12.2,4)}]
+    \draw[rule,line width=2.4pt,->] (-3.0,0) -- (3.0,0);
+    \draw[rule,line width=2.4pt,->] (0,-2.4) -- (0,2.4);
+    \node[fill,draw=rule,line width=2pt,circle,minimum size=44pt,text=fg] at (-1.9,1.4) {};
+    \node[fill,draw=rule,line width=2pt,circle,minimum size=28pt,text=fg] at (-1.1,0.7) {};
+    \node[fill,draw=rule,line width=2pt,circle,minimum size=52pt,text=fg] at (-2.3,-1.2) {};
+    \node[fill,draw=rule,line width=2pt,circle,minimum size=24pt,text=fg] at (1.0,1.7) {};
+    \node[fill,draw=rule,line width=2pt,circle,minimum size=36pt,text=fg] at (1.8,0.9) {};
+    \node[fill,draw=rule,line width=2pt,circle,minimum size=30pt,text=fg] at (2.1,-1.6) {};
+    \node[fill,draw=rule,line width=2pt,circle,minimum size=20pt,text=fg] at (0.8,-0.9) {};
+    \node[circle,fill=link,minimum size=18pt] at (0,0) {};
+  \end{scope}
+  % left text block
+  \node[anchor=west,text=link,font=\fontsize{40}{48}\selectfont\scshape] at (1.2,5.6) {Pennysia};
+  \node[anchor=west,text=fg,font=\fontsize{88}{100}\selectfont\bfseries,align=left] at (1.2,4.4) {An Open\\[8pt] Liquidity Network};
+  \draw[rule,line width=2pt] (1.25,2.5) -- (5.2,2.5);
+  \node[anchor=west,text=rule,font=\fontsize{34}{40}\selectfont] at (1.2,1.9) {Whitepaper v1.0 \textperiodcentered{} October 2026};
+\end{tikzpicture}
+\end{document}
