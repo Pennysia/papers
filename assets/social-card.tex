@@ -2,34 +2,33 @@
 \usepackage[paperwidth=32in,paperheight=16in,margin=0pt]{geometry}
 \usepackage{tikz}
 \usepackage[T1]{fontenc}
-\usepackage{newtxtext}
-\definecolor{bg}{RGB}{24,26,31}
-\definecolor{fg}{RGB}{228,228,225}
-\definecolor{link}{RGB}{122,162,224}
-\definecolor{fill}{RGB}{46,50,60}
-\definecolor{rule}{RGB}{92,98,112}
-\pagecolor{bg}
+\usepackage{newtxtext,newtxmath}
+\usepackage{microtype}
+\definecolor{paper}{RGB}{255,255,255}
+\definecolor{ink}{RGB}{18,18,18}
+\definecolor{muted}{RGB}{95,95,95}
+\definecolor{rulecol}{RGB}{185,185,185}
+\pagecolor{paper}
 \pagestyle{empty}
 \begin{document}%
-\begin{tikzpicture}[x=2in,y=2in]
-  \fill[bg] (0,0) rectangle (16,8);
-  % liquidity-map quadrant motif, right side
-  \begin{scope}[shift={(12.2,4)}]
-    \draw[rule,line width=2.4pt,->] (-3.0,0) -- (3.0,0);
-    \draw[rule,line width=2.4pt,->] (0,-2.4) -- (0,2.4);
-    \node[fill,draw=rule,line width=2pt,circle,minimum size=44pt,text=fg] at (-1.9,1.4) {};
-    \node[fill,draw=rule,line width=2pt,circle,minimum size=28pt,text=fg] at (-1.1,0.7) {};
-    \node[fill,draw=rule,line width=2pt,circle,minimum size=52pt,text=fg] at (-2.3,-1.2) {};
-    \node[fill,draw=rule,line width=2pt,circle,minimum size=24pt,text=fg] at (1.0,1.7) {};
-    \node[fill,draw=rule,line width=2pt,circle,minimum size=36pt,text=fg] at (1.8,0.9) {};
-    \node[fill,draw=rule,line width=2pt,circle,minimum size=30pt,text=fg] at (2.1,-1.6) {};
-    \node[fill,draw=rule,line width=2pt,circle,minimum size=20pt,text=fg] at (0.8,-0.9) {};
-    \node[circle,fill=link,minimum size=18pt] at (0,0) {};
-  \end{scope}
-  % left text block
-  \node[anchor=west,text=link,font=\fontsize{40}{48}\selectfont\scshape] at (1.2,5.6) {Pennysia};
-  \node[anchor=west,text=fg,font=\fontsize{88}{100}\selectfont\bfseries,align=left] at (1.2,4.4) {An Open\\[8pt] Liquidity Network};
-  \draw[rule,line width=2pt] (1.25,2.5) -- (5.2,2.5);
-  \node[anchor=west,text=rule,font=\fontsize{34}{40}\selectfont] at (1.2,1.9) {Whitepaper v1.0 \textperiodcentered{} October 2026};
-\end{tikzpicture}
+\noindent\begin{tikzpicture}[x=2in,y=2in]
+  \fill[paper] (0,0) rectangle (16,8);
+
+  % Running header
+  \node[anchor=west,text=muted,font=\fontsize{22}{26}\selectfont\scshape] at (1.8,7.05) {Pennysia: An Open Liquidity Network};
+  \node[anchor=east,text=muted,font=\fontsize{22}{26}\selectfont] at (14.2,7.05) {Whitepaper v1.0 \textperiodcentered{} October 2026};
+  \draw[rulecol,line width=1.4pt] (1.8,6.7) -- (14.2,6.7);
+
+  % Title block — exact paper typography
+  \node[anchor=center,text=ink,font=\fontsize{70}{80}\selectfont\bfseries] at (8,5.5) {Pennysia: An Open Liquidity Network};
+  \node[anchor=center,text=ink,font=\fontsize{34}{40}\selectfont] at (8,4.6) {Pennysia, Inc.};
+  \node[anchor=center,text=ink,font=\fontsize{28}{34}\selectfont] at (8,3.95) {October 2026};
+
+  % Verbatim opening paragraph of the paper's abstract
+  \node[anchor=center,text=ink,font=\fontsize{26}{32}\selectfont\bfseries] at (8,2.95) {Abstract};
+  \node[anchor=north,text=ink,font=\fontsize{26}{38}\selectfont] at (8,2.55) {%
+    \parbox{20.5in}{\setlength{\parindent}{0pt}\noindent
+    Pennysia is an open liquidity network, a single exchange layer where every source of liquidity, wherever it sits, competes for the user's order. Decentralized exchanges, aggregators, intent solvers, market makers, perpetual and prediction protocols, vaults, fiat ramps, and licensed venues all answer the same auction. The best executable price wins. The user signs once. The network routes, executes, and verifies the fill. For builders, a venue connects once and competes for every order from day one.}%
+  };
+\end{tikzpicture}%
 \end{document}
