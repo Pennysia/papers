@@ -1,4 +1,6 @@
 % !TEX root = ../main.tex
+% Keep the short schema and its explanation together.
+\noindent\begin{minipage}{\textwidth}
 \section{Order Format}\label{app:order}
 
 The following payload describes the proposed order fields, using EIP-712 typed data on EVM~\cite{eip712}. The final specification will define encoding and chain-specific signatures.
@@ -28,3 +30,4 @@ OLN-Order {
 }
 
 The output floor \texttt{minAmount} is the WAP. The \texttt{lanes} field limits eligible venues, with \texttt{REGULATED} requiring verification. Each rail uses these fields to validate delivery to the specified recipient on the destination chain before the deadline.
+\end{minipage}\par

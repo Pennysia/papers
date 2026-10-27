@@ -1,13 +1,13 @@
 % !TEX root = ../main.tex
 \section{Introduction}\label{sec:introduction}
 
-Crypto liquidity is distributed across chains and venues with different access requirements~\cite{sok-defi}. Comparing prices across them often requires users to manage separate accounts, wallets, and settlement processes.
+Crypto liquidity is fragmented across chains and venues with different access requirements~\cite{sok-defi}. The price available to a trader depends on where their assets are held and which providers they can access. Reaching a better quote elsewhere can require moving funds or opening another account, adding costs that reduce its advantage.
 
-The \textbf{chain boundary} separates liquidity across networks with distinct execution environments. A favorable price on another chain may require bridging~\cite{bridges}, additional gas tokens, and a different wallet workflow. These costs affect whether the quoted price is useful to the trader.
+The \textbf{chain boundary} separates markets that maintain their own liquidity and settlement infrastructure. Execution quality varies by pair and order size, so a better quote may sit on a different network from the user's funds. Accessing it can involve bridge fees and settlement delays, as well as bridge risk~\cite{bridges}. The user must account for these costs and arrange execution across both networks before a price comparison becomes actionable.
 
-The \textbf{access boundary} separates open protocols from venues that require accounts or verification. Liquidity depth varies with market conditions and venue design~\cite{dexdepth}, so either group may offer a better price for a particular order. Accessing both requires reconciling their onboarding and settlement requirements.
+The \textbf{access boundary} separates permissionless protocols from venues that require accounts or verification. These markets expose different liquidity and operate under different custody and settlement terms. Depth varies with market conditions and venue design~\cite{dexdepth}, so either group may offer a better price for a given order. A trader seeking access to both must navigate their separate onboarding processes and trading interfaces.
 
-Self-custody allows users to hold and transfer assets without a trusted intermediary~\cite{bitcoin}, but key management and transaction preparation add operational work. Centralized exchanges simplify that work by managing assets on the user's behalf. Pennysia aims to offer comparable ease of use while preserving user authorization over asset movements. Figure~\ref{fig:journey} illustrates the steps the design seeks to consolidate.
+For the user, this fragmentation compounds the practical work of self-custody. Direct control over assets~\cite{bitcoin} comes with responsibility for key management and transaction authorization, while gas and cross-chain transfers require additional coordination. Centralized exchanges consolidate much of this work within an account by holding assets on the user's behalf. Pennysia aims to provide comparable ease of access and execution speed while preserving user control over funds. Figure~\ref{fig:journey} illustrates the workflows the network seeks to simplify.
 
 % Keep the comparison after the complete paragraph, including across a page break.
 \begin{figure}[H]
@@ -70,7 +70,7 @@ Intent-based execution~\cite{intentauction} lets users authorize an outcome whil
 (2021.000,5.98) (2021.083,6.32) (2021.167,7.6) (2021.250,7.84) (2021.333,10.41) (2021.417,13.07) (2021.500,11.82) (2021.583,10.37) (2021.667,9.91) (2021.750,7.44) (2021.833,9.44) (2021.917,12.89) (2022.000,14.58) (2022.083,14.58) (2022.167,11.42) (2022.250,8.72) (2022.333,9.44) (2022.417,9.04) (2022.500,9.3) (2022.583,7.32) (2022.667,5.43) (2022.750,6.29) (2022.833,8.76) (2022.917,8.02) (2023.000,8.04) (2023.083,7.18) (2023.167,10.32) (2023.250,10.18) (2023.333,11.78) (2023.417,10.42) (2023.500,9.46) (2023.583,9.47) (2023.667,10.86) (2023.750,9.36) (2023.833,9.32) (2023.917,9.07) (2024.000,8.65) (2024.083,8.35) (2024.167,9.28) (2024.250,10.25) (2024.333,11.22) (2024.417,13.02) (2024.500,12.95) (2024.583,11.8) (2024.667,10.16)
 };
 % Reported landmark months: CoinGecko readings (circles),
-% then The Block top-30-DEX series (square; wider venue set).
+% then The Block's reported September 2026 ratio (square; separate source).
 \addplot[accent, thick, mark=*, mark size=1.1pt] coordinates {
 (2024.667,10.16) (2025.000,18.7) (2025.417,37.4) (2025.833,21.2)
 };
@@ -80,7 +80,7 @@ Intent-based execution~\cite{intentauction} lets users authorize an outcome whil
 \node[ollabel, anchor=south west, inner sep=2pt] at (axis cs:2026.67,25.0) {25\%};
 \end{axis}
 \end{tikzpicture}
-\caption{DEX spot volume as a share of CEX spot volume, 2021--2026. Line and circles use CoinGecko~\cite{coingecko}, monthly through Sep.\ 2024 and selected months thereafter. The square uses The Block's wider top-30-DEX series for Sep.\ 2026~\cite{theblock}; the series are indicative and not strictly comparable.}
+\caption{DEX spot volume as a share of CEX spot volume, 2021--2026. Line and circles use CoinGecko~\cite{coingecko}, monthly through Sep.\ 2024 and selected months thereafter. The square is The Block's reported ratio for Sep.\ 2026~\cite{theblock}; the sources use different coverage and are not strictly comparable.}
 \label{fig:dexshare}
 \end{figure}
 

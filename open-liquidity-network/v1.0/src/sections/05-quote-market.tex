@@ -27,7 +27,8 @@ Liquidity location informs the execution rail (Section~\ref{sec:execution}). Ato
 
 Figure~\ref{fig:axes} maps the landscape onto both axes.
 
-\begin{figure}[ht]
+% Keep the liquidity map with its explanation without flushing the rest of the page.
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[font=\footnotesize, every node/.append style={text=chrome}]
   \pgfmathsetlengthmacro{\qw}{0.39\textwidth}
@@ -66,4 +67,3 @@ Permissionless integration is free and self-serve through the adapter interface.
 \subsection{Chainless quoting}
 
 The user selects the assets and desired outcome. The routing layer resolves the execution path across supported chains and venues, presenting net output and settlement time for review. Chain and rail details remain available for inspection.
-\FloatBarrier

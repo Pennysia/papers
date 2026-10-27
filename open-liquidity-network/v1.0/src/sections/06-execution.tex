@@ -57,13 +57,13 @@ Worst-case output known at signing & WAP embedded in the order; enforced per rai
 Gas abstraction & Executor pays gas, priced into quote; sponsored where unavoidable \\
 Chain routing & Network resolves the execution path and destination \\
 Failure handling & Revert or expiry; venue refunds subject to counterparty risk \\
-Disclosed settlement time & Single-block target for same-chain fills; ETA quoted for slower rails \\
+Disclosed completion time & Rail-specific execution ETA; finality and slower settlement shown separately \\
 One signature & Review $\rightarrow$ sign $\rightarrow$ status to finality \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Same-chain fills target single-block settlement. Slower rails disclose an estimated completion time in the quote, with order status visible through settlement or failure.
+To match the responsiveness users expect from a centralized exchange, the design targets execution within a few seconds of receiving the signed order, down to sub-second execution where the venue and rail support it. Execution latency is measured from signed-order receipt to a verified fill, with blockchain finality tracked separately. Same-chain atomic fills depend on block inclusion, while cross-chain and asynchronous venue settlement may take longer. Quotes disclose the expected completion time for the selected rail, and order status distinguishes execution from final settlement.
 
 \begin{tbd}
 The executor design remains open between per-chain Settlement contracts and a shared intent-native architecture. The choice determines deployment and audit scope.
