@@ -7,9 +7,9 @@ This appendix records the experimental deployment on Ethereum Mainnet, live sinc
   \item \textbf{Parallel venue competition.} 30 venues quote per swap across four service classes (Table~\ref{tab:venues}), reaching thousands of underlying liquidity sources. 12,000+ tokens listed.
   \item \textbf{Settlement contract.} Publicly available onchain router under BUSL-1.1 (\texttt{0x3Aad\ldots795E}): single token pull, ordered venue fallback in one transaction, cross-chain intent routes, full revert on all-routes-fail.
   \item \textbf{Protections.} Signed output floor, gas-aware ranking, and unified Settlement approval, forming the basis of Section~\ref{sec:security}.
-  \item \textbf{Fees live.} Surplus fee on outperformance (10\% cap, hardcoded), flat per-order protocol fee, partner share on intent routes. Every fee folds into the signed quote.
-  \item \textbf{Automated verification.} Slither (static analysis), Halmos (symbolic execution, 168 tests), Medusa (coverage-guided fuzzing, 223 tests), Certora (formal verification, 105 rules). The latter three use isolated component harnesses. Reports are public in the Settlement repository.
-  \item \textbf{Defensive invariants.} Reentrancy guards via EIP-1153~\cite{eip1153}; venue/allowance-target may not equal the contract. Refunds are baseline-relative. Owner keys cannot raise the surplus cap.
+  \item \textbf{Fees live.} Surplus fee on outperformance (10\% cap), flat protocol fee, partner share on intent routes; every fee folds into the signed quote.
+  \item \textbf{Automated verification.} Slither, Halmos (168 tests), Medusa (223 tests), Certora (105 rules); the latter three use isolated component harnesses. Reports are public in the Settlement repository.
+  \item \textbf{Defensive invariants.} Reentrancy guards via EIP-1153~\cite{eip1153}; venue/allowance-target may not equal the contract; refunds are baseline-relative; owner keys cannot raise the surplus cap.
 \end{itemize}
 
 \begin{table}[ht]

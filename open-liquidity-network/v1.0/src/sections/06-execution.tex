@@ -54,11 +54,9 @@ A successful fill must deliver at least the signed minimum before the deadline. 
 \textbf{Requirement} & \textbf{Mechanism} \\
 \midrule
 Worst-case output known at signing & WAP embedded in the order; enforced per rail \\
-Gas abstraction & Executor pays gas, priced into quote; sponsored where unavoidable \\
-Chain routing & Network resolves the execution path and destination \\
+Gas and chain abstraction & Executor pays gas, priced into quote; network resolves the execution path \\
 Failure handling & Revert or expiry; venue refunds subject to counterparty risk \\
 Disclosed completion time & Rail-specific execution ETA; finality and slower settlement shown separately \\
-One signature & Review $\rightarrow$ sign $\rightarrow$ status to finality \\
 \bottomrule
 \end{tabular}
 \end{table}
