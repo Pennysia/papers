@@ -1,15 +1,16 @@
 % !TEX root = ../main.tex
 \section{Introduction}\label{sec:introduction}
 
-Crypto liquidity is fragmented along two axes at once~\cite{sok-defi}, and every exchange today serves only a slice of the result.
+Crypto liquidity is distributed across chains and venues with different access requirements~\cite{sok-defi}. Comparing prices across them often requires users to manage separate accounts, wallets, and settlement processes.
 
-The first axis is \textbf{chains}. Liquidity is spread across dozens of networks (Ethereum and its L2s, Solana, BNB Chain, and a growing set of new execution environments), each with its own DEXs, aggregators, market makers, and intent protocols. No single venue wins on every pair, size, and moment. A trader who chases prices across chains inherits bridge risk~\cite{bridges}, gas-token juggling, and a different mental model per network. Chains behave like disconnected internets. A service lives where it deployed, and reaching it elsewhere means switching providers. Even the strongest onchain venues remain single-domain: excellent execution on their own chains and instruments, with the rest of the market outside reach.
+The \textbf{chain boundary} separates liquidity across networks with distinct execution environments. A favorable price on another chain may require bridging~\cite{bridges}, additional gas tokens, and a different wallet workflow. These costs affect whether the quoted price is useful to the trader.
 
-The second axis is the \textbf{protocol boundary}: the split between \emph{open} and \emph{closed} protocols. Open protocols (DEXs, intent networks, onchain markets and vaults) are permissionless, transparent, and self-settling, but shallow on size~\cite{dexdepth}. Closed protocols (centralized books, market makers, OTC desks) hold deeper, tighter liquidity behind accounts, KYC, and custodial terms. Traders choose between two products and two trust models, with no common interface. The deepest quote in the world is invisible to an open-protocol trader.
+The \textbf{access boundary} separates open protocols from venues that require accounts or verification. Liquidity depth varies with market conditions and venue design~\cite{dexdepth}, so either group may offer a better price for a particular order. Accessing both requires reconciling their onboarding and settlement requirements.
 
-Between the trader and both axes sits \textbf{the UX wall}. Self-custody is the founding premise of this space: Bitcoin was built so that holding and moving value requires no trusted intermediary~\cite{bitcoin}. Its cost has never been ideological; it is operational. Seed phrases gate the first ten minutes. Gas requires a native token on every chain. Chain selection, bridging, and per-venue approvals turn one trade into a checklist, and the endpoints (buying in with a card, cashing out to a bank account) still route through custodial platforms. Each step is a point where users exit to a centralized exchange's account login. The market's trade-off today: \textbf{easy to use, or yours.} Centralized exchanges offer the experience; decentralized venues offer the custody. No venue offers both. Figure~\ref{fig:journey} lays out both journeys.
+Self-custody allows users to hold and transfer assets without a trusted intermediary~\cite{bitcoin}, but key management and transaction preparation add operational work. Centralized exchanges simplify that work by managing assets on the user's behalf. Pennysia aims to offer comparable ease of use while preserving user authorization over asset movements. Figure~\ref{fig:journey} illustrates the steps the design seeks to consolidate.
 
-\begin{figure}[ht]
+% Keep the comparison after the complete paragraph, including across a page break.
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[font=\footnotesize, every node/.append style={text=chrome}]
 \pgfmathsetlengthmacro{\colw}{0.94\textwidth/4}
@@ -47,11 +48,11 @@ Between the trader and both axes sits \textbf{the UX wall}. Self-custody is the 
 \node[anchor=north west, align=left, text width=\colw-0.3cm] at (3*\colw+\labx,1.5)
   {6.~bank withdrawal};
 \end{tikzpicture}
-\caption{Illustrative fiat-in to fiat-out journeys. Self-custody: ${\sim}16$ steps across three platforms, with seed custody, gas, and chain choice at every boundary; card funding still means a KYC'd ramp at a markup. Custodial: ${\sim}6$ steps, because the venue holds the keys. Design target: self-custody at the custodial step count.}
+\caption{Illustrative fiat-in to fiat-out workflows. The self-custody example spans a ramp, wallet, and trading venue; the custodial example consolidates these steps within one platform. Pennysia aims to simplify the former through a unified account.}
 \label{fig:journey}
 \end{figure}
 
-Three enablers make this the moment to build it. Intent-based execution~\cite{intentauction} turned ``user signs, someone else transacts'' into production infrastructure, the mechanical basis for gasless, chainless trades. Embedded wallets matured~\cite{smartaccounts} to where a Web2 login (email, Google, Apple) provisions real EVM and Solana wallets, giving Web2 onboarding with user-side keys. And venue proliferation across both liquidity kinds makes comparison a routing problem, not a shopping problem. Figure~\ref{fig:dexshare} charts the migration already underway.
+Intent-based execution~\cite{intentauction} lets users authorize an outcome while an executor submits the transactions and pays gas. Embedded wallets~\cite{smartaccounts} make user-controlled addresses accessible through familiar login methods. Together, these mechanisms support a common interface to a growing onchain market (Figure~\ref{fig:dexshare}).
 
 \begin{figure}[ht]
 \centering
@@ -79,9 +80,8 @@ Three enablers make this the moment to build it. Intent-based execution~\cite{in
 \node[ollabel, anchor=south west, inner sep=2pt] at (axis cs:2026.67,25.0) {25\%};
 \end{axis}
 \end{tikzpicture}
-\caption{DEX spot volume as a share of CEX spot volume, 2021--2026: 6\% to ${\sim}25\%$. Line and circles: CoinGecko~\cite{coingecko} (monthly through Sep.\ 2024; landmark months after). Square: The Block's wider top-30-DEX series, Sep.\ 2026~\cite{theblock}, indicative not strictly comparable. The migration is real but incomplete; the UX wall is the remaining ceiling.}
+\caption{DEX spot volume as a share of CEX spot volume, 2021--2026. Line and circles use CoinGecko~\cite{coingecko}, monthly through Sep.\ 2024 and selected months thereafter. The square uses The Block's wider top-30-DEX series for Sep.\ 2026~\cite{theblock}; the series are indicative and not strictly comparable.}
 \label{fig:dexshare}
 \end{figure}
 
-Pennysia v1, the Open Liquidity Network (OLN), generalizes the Ethereum prototype's proof (Appendix~\ref{app:v1}) along both fragmentation axes: a unified layer spanning \textbf{every chain} and \textbf{every liquidity service} (spot today; perpetuals, prediction markets, and yield protocols next), wrapped in an account that removes the UX wall. Pennysia implements none of these services; it operates the network that connects to all of them. The end state is a superset of the centralized exchange: every essential feature (one login, fiat rails, deepest liquidity, more tokens, fast settlement) with custody that never leaves the user's keys. For builders the network is distribution: a new protocol connects once and competes for every order.
-
+Pennysia v1, the Open Liquidity Network (OLN), extends the Ethereum prototype (Appendix~\ref{app:v1}) across chain families and liquidity services. Its scope includes spot trading, lending, perpetuals, prediction markets, and vaults supplied by external providers. Pennysia provides the account, routing, and settlement coordination through which users access them, and a common integration through which providers compete for eligible orders.

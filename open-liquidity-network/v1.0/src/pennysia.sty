@@ -20,6 +20,7 @@
 \RequirePackage{tikz}
 \RequirePackage{pgfplots}
 \RequirePackage{placeins}                     % \FloatBarrier at section boundaries
+\RequirePackage{float}                        % Keep the opening figure after its paragraph
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric}
 
@@ -90,6 +91,8 @@
 
 % ---- Misc ---------------------------------------------------------------------
 \setlength{\parindent}{1.5em}
+\clubpenalty=10000
+\widowpenalty=10000
 \captionsetup{font=small,labelfont=bf}
 \captionsetup[table]{position=above}
 

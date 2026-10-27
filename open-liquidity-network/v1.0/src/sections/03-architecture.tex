@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 \section{System Overview}\label{sec:architecture}
 
-Four layers, each with one job (Figure~\ref{fig:layers}). Users interact only with the top. Venues integrate only with the middle.
+The architecture separates the user interface and account from quote selection and execution (Figure~\ref{fig:layers}).
 
 \begin{figure}[ht]
 \centering
@@ -20,13 +20,11 @@ Four layers, each with one job (Figure~\ref{fig:layers}). Users interact only wi
   \node[anchor=west] at (0.15,0.4) {\textbf{Execution}};
   \node[anchor=west, align=left] at (3.35,0.4) {signed order $\rightarrow$ best venue $\rightarrow$ verified fill; Settlement, intents, venue rails};
 \end{tikzpicture}
-\caption{Four layers, each with one job. Users interact only with the top; venues integrate only with the quote market and execution layers.}
+\caption{Responsibilities of the four network layers.}
 \label{fig:layers}
 \end{figure}
 
-\textbf{Identity} provisions non-custodial embedded wallets per chain family from a Web2 login (email, Google, Apple); external wallets connect for the same surface (Section~\ref{sec:account}). The \textbf{quote market} fans every order out in parallel to all venues in the user's enabled lanes and normalizes and ranks the quotes (Section~\ref{sec:quote-market}). The \textbf{execution fabric} carries a signed order to settlement over three rails (atomic routes, intent rails, venue rails) under one set of guarantees (Section~\ref{sec:execution}). The \textbf{experience} presents a unified balance, one trade ticket, and one status line, with chains visible only on request; portfolio and verification state also live here (Section~\ref{sec:compliance}).
-
-Every order walks the same loop (quote, sign, execute, verify) regardless of which rail carries it. Figure~\ref{fig:participants} draws the boundary each participant sees.
+Identity connects wallet access and verification to the account (Section~\ref{sec:account}). The quote market compares eligible providers (Section~\ref{sec:quote-market}), then the execution layer settles the signed order using the appropriate rail (Section~\ref{sec:execution}). The experience layer presents balances and order status throughout this process. Figure~\ref{fig:participants} shows how external participants connect to these layers.
 
 \begin{figure}[ht]
 \centering
@@ -56,6 +54,7 @@ Every order walks the same loop (quote, sign, execute, verify) regardless of whi
   \draw[olarrow] ([yshift=4pt]exe.east) -- node[ollabel, above]{execute} ([yshift=4pt]exe.east -| ven.west);
   \draw[olarrow] ([yshift=-4pt]exe.east -| ven.west) -- node[ollabel, below]{fill} ([yshift=-4pt]exe.east);
 \end{tikzpicture}
-\caption{How each participant connects. The user touches only Experience; wallet and KYC providers touch only Identity; venues see only the quote market and execution layers, and only the ranked winner receives the signed order. Pennysia signs nothing and holds nothing.}
+\caption{Participant interfaces. Wallet and KYC providers connect through Identity; venues exchange quotes and settlement information with the quote market and execution layers. The selected venue receives the signed order.}
 \label{fig:participants}
 \end{figure}
+\FloatBarrier

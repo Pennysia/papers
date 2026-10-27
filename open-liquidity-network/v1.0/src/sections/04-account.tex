@@ -1,17 +1,17 @@
 % !TEX root = ../main.tex
 \section{The Account}\label{sec:account}
 
-The account is where the CEX/DEX line is deliberately blurred. Signup reads like a centralized exchange. Custody is a self-custody wallet.
+The account combines familiar login methods with user-controlled onchain wallets.
 
 \subsection{Onboarding and custody}
 
-A user creates an account with a Web2 login (email, Google, or Apple). No seed phrase, no browser extension. Provisioning creates \textbf{embedded wallets}, one per supported chain family (EVM and Solana at launch). The wallets are real onchain addresses belonging to the user. Assets sent to them are theirs, and every order signed is a standard wallet signature. A Pennysia account is a key management scheme with a login attached, not a database balance. Table~\ref{tab:authority} draws the boundary.
+A Web2 login (email, Google, or Apple) provisions \textbf{embedded wallets} for each supported chain family, initially EVM and Solana, without requiring a seed phrase or browser extension during signup. Assets reside at user-controlled onchain addresses, and moving them requires a wallet signature produced in the user's session. Table~\ref{tab:authority} defines each participant's authority.
 
 \begin{table}[ht]
 \centering
 \caption{Authority boundaries: what each actor can and cannot do.}
 \label{tab:authority}
-\begin{tabular}{@{}lp{0.37\textwidth}p{0.35\textwidth}@{}}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.37\textwidth}>{\raggedright\arraybackslash}p{0.35\textwidth}@{}}
 \toprule
 \textbf{Actor} & \textbf{Can do} & \textbf{Cannot do} \\
 \midrule
@@ -22,20 +22,20 @@ Wallet provider & Co-secure key material (device/enclave shares); assist user-dr
 \end{tabular}
 \end{table}
 
-The load-bearing property is that session verification exists to assemble quotes and operate the account, never to move funds. Every value-moving operation traces to a signature produced in the user's session.
+Session verification authorizes account operations and quote assembly. It does not grant Pennysia signing authority.
 
 \subsection{Gas and wallet choice}
 
-Because execution is signature-first (Section~\ref{sec:execution}), gas is paid by fillers, venues, or relayers and priced into the quote. A user holding only USDC can trade it for output on any chain without acquiring a native token. Where a user's own onchain action is unavoidable (e.g., a first approval), the network sponsors or abstracts the gas rather than assigning a chain-specific errand.
+Executors pay gas and include its cost in the quote (Section~\ref{sec:execution}), so users can trade without acquiring a native gas token. Where a user must authorize an onchain action, such as an initial approval, the network sponsors or abstracts the gas.
 
-Embedded wallets are the onboarding path, not the only path. An external wallet (extension, WalletConnect, hardware) reaches the identical quote market and execution fabric. The account then acts as a unified view and session.
+External wallets, including extensions, WalletConnect connections, and hardware wallets, access the same quote market. The account provides a unified view and session for these wallets.
 
 \subsection{In and out}
 
-On- and off-ramps are a service class, not a feature Pennysia builds. Ramp providers (cards, bank transfers, Apple Pay, Google Pay) return executable quotes for fiat $\leftrightarrow$ token conversion and compete in the same auction (Section~\ref{sec:quote-market}). Fiat rails are regulated by nature, so they sit in the regulated lane. The optional verification credential (Section~\ref{sec:credential}) unlocks them. Cash in, cash out. Never a custodial balance in between.
+External ramp providers quote fiat-to-token and token-to-fiat conversions through the auction, with support for cards, bank transfers, Apple Pay, and Google Pay. These services sit in the regulated lane and require the applicable verification (Section~\ref{sec:credential}). Pennysia coordinates access without holding a custodial balance.
 
-Recovery is the wallet provider's domain. Re-authentication restores key shares without Pennysia involvement. Embedded wallets are ordinary onchain addresses and orders are standard signed payloads, so a user who leaves keeps full control. No exit cost by design.
+The wallet provider handles recovery through re-authentication and restoration of key shares. Users can export and manage their keys independently of Pennysia.
 
 \begin{tbd}
-Signature model under embedded wallets: plain EOA + typed-data intents (EIP-712-class~\cite{eip712}) vs.\ smart accounts (ERC-4337~\cite{erc4337}, EIP-7702~\cite{eip7702}) with session keys and programmable recovery. The paper describes behavior both satisfy (signature-first, gasless, non-custodial) without committing the primitive. Resolve before spec detail lands in Appendix~\ref{app:order}.
+The wallet implementation may use externally owned accounts with typed-data intents~\cite{eip712} or smart accounts~\cite{erc4337,eip7702} supporting session keys and programmable recovery. This choice must be resolved in the detailed order specification (Appendix~\ref{app:order}).
 \end{tbd}

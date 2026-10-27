@@ -1,7 +1,7 @@
 % !TEX root = ../main.tex
 \section{Order Format}\label{app:order}
 
-A preliminary sketch of the order payload, the unit every venue competes to fill, signed as EIP-712 typed data on EVM~\cite{eip712}. Field-level spec publishes when the format stabilizes; this shows intent, not wire format.
+The following payload describes the proposed order fields, using EIP-712 typed data on EVM~\cite{eip712}. The final specification will define encoding and chain-specific signatures.
 
 {\footnotesize
 \begin{verbatim}
@@ -27,4 +27,4 @@ OLN-Order {
 \end{verbatim}
 }
 
-\texttt{minAmount} \textbf{is the WAP}, the worst-case output the user signed, enforced on every rail. \texttt{lanes} scopes which venues may fill, and \texttt{REGULATED} requires a verified user. Fillers read the same object on every rail: take \texttt{input} on \texttt{input.chain}, deliver \texttt{output} on \texttt{output.chain}, at or above \texttt{minAmount}, before \texttt{deadline}.
+The output floor \texttt{minAmount} is the WAP. The \texttt{lanes} field limits eligible venues, with \texttt{REGULATED} requiring verification. Each rail uses these fields to validate delivery to the specified recipient on the destination chain before the deadline.
