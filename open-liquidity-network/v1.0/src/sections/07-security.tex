@@ -1,35 +1,16 @@
 % !TEX root = ../main.tex
 \section{Security Model}\label{sec:security}
 
-Security depends on venue controls, enforcement during execution, and protection of the user's signing keys.
+The signed order is the enforcement boundary. Routes and quotes are validated against the signed payload before execution, and execution conditions are checked at submission because public-chain transaction ordering is not guaranteed~\cite{flashboys}. A fill is recorded only when delivery meets the signed minimum before the deadline to the specified recipient. Atomic routes spend through a single Settlement approval constrained by the authorized input, and controlled failure follows the procedure in Section~\ref{sec:rails}.
 
-\subsection{Venue protections}
+\subsection{Contract and venue exposure}
 
-Venue-specific protections, such as solver bonds or contract controls, continue to apply. Pennysia validates execution independently, while retaining exposure to the underlying venue's implementation and settlement model.
+A unified approval concentrates contract risk in Settlement, making its implementation and verification the critical dependency. New contracts are intended to follow the prototype's process (Appendix~\ref{app:v1}): published source, invariant testing, and formal analysis where tractable, with deployment artifacts and verification results accompanying each chain rollout. Venue-side protections such as solver bonds or contract controls continue to apply underneath; Pennysia validates execution independently while retaining exposure to each venue's implementation and settlement model.
 
-\subsection{Enforced execution}
+\subsection{Account security}
 
-Execution checks enforce the authorized terms and verify the resulting transfer.
-
-\begin{itemize}[leftmargin=1.5em]
-  \item \textbf{Order validation.} Routes and quotes are checked against the signed payload before execution. Public-chain transaction reordering~\cite{flashboys} requires validation of execution conditions.
-  \item \textbf{Spending authority.} Atomic routes use a single Settlement approval, with transfers constrained by the authorized input and recipient.
-  \item \textbf{Fill verification.} Settlement records require a match to the signed terms, including the output minimum and deadline. Atomic fallback follows the procedure in Section~\ref{sec:rails}.
-\end{itemize}
-
-\subsection{Account and key security}
-
-Table~\ref{tab:authority} separates account operations from signing authority. A compromised Pennysia session must not grant the server the ability to sign or move assets; wallet authorization remains the user's control over transfers.
+Table~\ref{tab:authority} separates session authority from signing authority. A compromised session exposes account operations but cannot move assets, because every transfer requires a wallet signature. Embedded wallets rely on co-secured key material and provider-assisted recovery~\cite{threshold}; users who prefer independent key management can connect external wallets to the same quote market, and embedded-wallet keys can be exported.
 
 \subsection{Residual risks}\label{sec:risk}
 
-The design retains the following dependencies and exposures.
-
-\begin{itemize}[leftmargin=1.5em]
-  \item \textbf{Latency and filler availability.} Cross-chain settlement depends on filler liveness. Market movements or unavailable fillers can cause expiry and require a new quote. Multiple filler networks and alternative routes reduce this dependence where available.
-  \item \textbf{Venue counterparty exposure.} Deposit-address settlement depends on the venue delivering output or honoring a refund. The quote discloses the settlement window and counterparty model.
-  \item \textbf{Approval concentration.} A unified approval concentrates contract risk in Settlement, making its implementation and verification critical.
-  \item \textbf{Wallet-provider dependence.} Embedded wallets rely on co-secured key material and provider-assisted recovery~\cite{threshold}. External wallets support users who prefer a different key-management model.
-\end{itemize}
-
-New contracts are intended to follow the prototype's verification process (Appendix~\ref{app:v1}), with published source, invariant testing, and formal analysis where tractable. Deployment artifacts and verification results accompany each chain rollout. Common execution checks simplify integration but do not remove venue-specific risks.
+Two exposures sit outside the enforcement boundary. Cross-chain settlement depends on filler liveness: market movement or unavailable fillers cause expiry and require a new quote, with multiple filler networks and alternative routes reducing this dependence where available. Deposit-address settlement depends on the venue delivering output or honoring a refund during the settlement window disclosed in the quote.

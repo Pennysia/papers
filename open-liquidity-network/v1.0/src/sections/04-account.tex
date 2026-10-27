@@ -34,8 +34,4 @@ External wallets, including extensions, WalletConnect connections, and hardware 
 
 External ramp providers quote fiat-to-token and token-to-fiat conversions through the auction, with support for cards, bank transfers, Apple Pay, and Google Pay. These services sit in the regulated lane and require the applicable verification (Section~\ref{sec:credential}). Pennysia coordinates access without holding a custodial balance.
 
-The wallet provider handles recovery through re-authentication and restoration of key shares. Users can export and manage their keys independently of Pennysia.
-
-\begin{tbd}
-The wallet implementation may use externally owned accounts with typed-data intents~\cite{eip712} or smart accounts~\cite{erc4337,eip7702} supporting session keys and programmable recovery. This choice must be resolved in the detailed order specification (Appendix~\ref{app:order}).
-\end{tbd}
+The wallet provider handles recovery through re-authentication and restoration of key shares. Users can export and manage their keys independently of Pennysia. The account layer supports externally owned accounts signing typed-data orders~\cite{eip712} and smart accounts~\cite{erc4337,eip7702} with session keys and programmable recovery; the order format in Appendix~\ref{app:order} is compatible with either.

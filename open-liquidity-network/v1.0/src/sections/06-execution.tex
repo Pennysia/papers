@@ -65,6 +65,4 @@ One signature & Review $\rightarrow$ sign $\rightarrow$ status to finality \\
 
 To match the responsiveness users expect from a centralized exchange, the design targets execution within a few seconds of receiving the signed order, down to sub-second execution where the venue and rail support it. Execution latency is measured from signed-order receipt to a verified fill, with blockchain finality tracked separately. Same-chain atomic fills depend on block inclusion, while cross-chain and asynchronous venue settlement may take longer. Quotes disclose the expected completion time for the selected rail, and order status distinguishes execution from final settlement.
 
-\begin{tbd}
-The executor design remains open between per-chain Settlement contracts and a shared intent-native architecture. The choice determines deployment and audit scope.
-\end{tbd}
+Executors deploy per-chain Settlement contracts or share an intent-native architecture; deployment and audit scope follows the approach chosen for each rollout.
